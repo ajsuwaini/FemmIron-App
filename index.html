@@ -491,7 +491,7 @@
 <div class="page active" id="page-dashboard">
   <div class="hero">
     <div class="hero-tag">Selamat pagi ☀️</div>
-    <h1>Halo, Mama Sari! 🤱</h1>
+    <h1>Halo, Mama <span id="nama-display">Sari</span>! 👩‍🍼</h1>
     <p>Hari ini hari ke-168 kehamilanmu. Yuk cek status kesehatanmu dan jangan lupa minum TTD!</p>
     <div class="hero-actions">
       <button class="btn-hero btn-hero-primary" onclick="showPage('hb')">Catat Kadar Hb</button>
@@ -602,7 +602,7 @@
       </div>
     </div>
     <div style="margin-top:1.25rem;display:flex;gap:12px;flex-wrap:wrap">
-      <button class="btn-primary" onclick="cekHb()">✅ Simpan & Analisis</button>
+      <button class="btn-primary" onclick="cekHb(); updateNama()">✅ Simpan & Analisis</button>
       <button class="btn-secondary" onclick="showPage('dashboard')">Lihat Dashboard</button>
     </div>
   </div>
@@ -1108,6 +1108,13 @@ updateTrimester();
 renderCalendar();
 initChart();
 
+ function updateNama() {
+    let namaInput = document.getElementById('in-nama').value;
+    let namaDisplay = document.getElementById('nama-display');
+    if (namaDisplay && namaInput.trim() !== "") {
+        namaDisplay.innerText = namaInput;
+    }
+}
 // Initial dashboard alert
 document.getElementById('dash-alert').innerHTML = `<div class="alert-banner alert-ringan" style="margin-bottom:1.25rem"><div class="alert-icon">⚠️</div><div><strong>Anemia Ringan</strong>Hb Mama sedikit di bawah normal. Tingkatkan konsumsi makanan tinggi zat besi dan pastikan TTD rutin diminum ya, Ma!</div></div>`;
 </script>
