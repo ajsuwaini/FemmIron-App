@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FemmIron — Pendamping Sehat Ibu Hamil</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --teal: #0d9488;
+    --teal-light: #ccfbf1;
+    --teal-dark: #0f766e;
+    --teal-deeper: #134e4a;
+    --mint: #f0fdf4;
+    --off-white: #f8fafc;
+    --surface: #ffffff;
+    --border: #e2e8f0;
+    --border-light: #f1f5f9;
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #94a3b8;
+    --red-light: #fef2f2;
+    --red: #ef4444;
+    --red-text: #991b1b;
+    --orange-light: #fff7ed;
+    --orange: #f97316;
+    --orange-text: #9a3412;
+    --yellow-light: #fefce8;
+    --yellow: #eab308;
+    --yellow-text: #713f12;
+    --green-light: #f0fdf4;
+    --green: #22c55e;
+    --green-text: #14532d;
+    --font-display: 'DM Serif Display', serif;
+    --font-body: 'Plus Jakarta Sans', sans-serif;
+    --radius: 16px;
+    --radius-sm: 10px;
+    --shadow: 0 4px 24px rgba(13,148,136,0.08);
+    --shadow-card: 0 2px 12px rgba(0,0,0,0.06);
+  }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--off-white);
+    color: var(--text-primary);
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  /* NAV */
+  nav {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+  .logo-icon {
+    width: 36px; height: 36px;
+    background: var(--teal);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .logo-icon svg { width: 20px; height: 20px; fill: white; }
+  .logo-text { font-family: var(--font-display); font-size: 1.4rem; color: var(--teal-deeper); }
+  .logo-sub { font-size: 0.7rem; color: var(--text-muted); font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; }
+  .nav-tabs {
+    display: flex; gap: 4px;
+  }
+  .nav-tab {
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .nav-tab:hover { background: var(--border-light); color: var(--teal); }
+  .nav-tab.active { background: var(--teal-light); color: var(--teal-dark); }
+
+  /* LAYOUT */
+  main { max-width: 960px; margin: 0 auto; padding: 2rem 1.5rem; }
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, var(--teal) 0%, var(--teal-dark) 100%);
+    border-radius: var(--radius);
+    padding: 3rem 2.5rem;
+    color: white;
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    width: 300px; height: 300px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 50%;
+    top: -100px; right: -80px;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    width: 200px; height: 200px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 50%;
+    bottom: -60px; right: 120px;
+  }
+  .hero-tag {
+    display: inline-block;
+    background: rgba(255,255,255,0.2);
+    border-radius: 100px;
+    padding: 4px 14px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+  .hero h1 { font-family: var(--font-display); font-size: 2.4rem; line-height: 1.2; margin-bottom: 0.75rem; }
+  .hero p { font-size: 1rem; opacity: 0.85; max-width: 500px; margin-bottom: 1.75rem; }
+  .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn-hero {
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+  }
+  .btn-hero-primary { background: white; color: var(--teal-dark); }
+  .btn-hero-primary:hover { background: var(--teal-light); }
+  .btn-hero-secondary { background: rgba(255,255,255,0.15); color: white; border: 1.5px solid rgba(255,255,255,0.3); }
+  .btn-hero-secondary:hover { background: rgba(255,255,255,0.25); }
+
+  /* CARDS GRID */
+  .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+  .stat-card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-card);
+    position: relative;
+  }
+  .stat-card-icon {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+  }
+  .stat-card h3 { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.25rem; }
+  .stat-card .value { font-size: 1.8rem; font-weight: 600; color: var(--text-primary); }
+  .stat-card .value.big { font-family: var(--font-display); font-size: 2.2rem; }
+  .stat-card .sub { font-size: 0.8rem; color: var(--text-secondary); margin-top: 4px; }
+  .status-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 100px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    position: absolute;
+    top: 1.25rem; right: 1.25rem;
+  }
+
+  /* STATUS COLORS */
+  .status-normal { background: var(--green-light); color: var(--green-text); }
+  .status-ringan { background: var(--yellow-light); color: var(--yellow-text); }
+  .status-sedang { background: var(--orange-light); color: var(--orange-text); }
+  .status-berat { background: var(--red-light); color: var(--red-text); }
+  .icon-teal { background: var(--teal-light); color: var(--teal); }
+  .icon-green { background: var(--green-light); color: #16a34a; }
+  .icon-orange { background: var(--orange-light); color: var(--orange); }
+  .icon-red { background: var(--red-light); color: var(--red); }
+
+  /* SECTION TITLES */
+  .section-title { font-family: var(--font-display); font-size: 1.5rem; color: var(--text-primary); margin-bottom: 0.25rem; }
+  .section-sub { font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 1.25rem; }
+
+  /* ALERT BANNER */
+  .alert-banner {
+    border-radius: var(--radius-sm);
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.25rem;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    font-size: 0.875rem;
+  }
+  .alert-banner .alert-icon { font-size: 1.2rem; flex-shrink: 0; }
+  .alert-banner strong { display: block; font-weight: 600; margin-bottom: 2px; }
+  .alert-normal { background: var(--green-light); color: var(--green-text); border: 1px solid #bbf7d0; }
+  .alert-ringan { background: var(--yellow-light); color: var(--yellow-text); border: 1px solid #fef08a; }
+  .alert-sedang { background: var(--orange-light); color: var(--orange-text); border: 1px solid #fed7aa; }
+  .alert-berat { background: var(--red-light); color: var(--red-text); border: 1px solid #fecaca; border-width: 2px; animation: pulse-border 2s infinite; }
+  @keyframes pulse-border { 0%,100%{border-color:#fecaca} 50%{border-color:#ef4444} }
+
+  /* FORM */
+  .form-card { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); padding: 2rem; box-shadow: var(--shadow-card); }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+  @media(max-width:600px){ .form-grid { grid-template-columns: 1fr; } }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group label { font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.04em; }
+  .form-group input, .form-group select {
+    padding: 10px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    background: var(--surface);
+    transition: border-color 0.2s;
+    outline: none;
+  }
+  .form-group input:focus, .form-group select:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(13,148,136,0.12); }
+  .form-hint { font-size: 0.75rem; color: var(--text-muted); }
+  .btn-primary {
+    background: var(--teal);
+    color: white;
+    border: none;
+    padding: 12px 28px;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .btn-primary:hover { background: var(--teal-dark); transform: translateY(-1px); }
+  .btn-primary:active { transform: translateY(0); }
+  .btn-secondary {
+    background: transparent;
+    color: var(--teal);
+    border: 1.5px solid var(--teal);
+    padding: 10px 20px;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-secondary:hover { background: var(--teal-light); }
+
+  /* CHART */
+  .chart-card { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); padding: 1.75rem; box-shadow: var(--shadow-card); margin-bottom: 1.5rem; }
+  .chart-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; }
+  .chart-title { font-family: var(--font-display); font-size: 1.2rem; }
+  .chart-legend { display: flex; gap: 16px; font-size: 0.78rem; color: var(--text-secondary); }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+  /* MENU CARDS */
+  .menu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; }
+  .menu-card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    box-shadow: var(--shadow-card);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .menu-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+  .menu-card-header {
+    padding: 1rem 1.25rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .menu-emoji { font-size: 2rem; }
+  .menu-fe { font-size: 0.75rem; font-weight: 700; color: var(--teal-dark); background: var(--teal-light); padding: 4px 10px; border-radius: 100px; }
+  .menu-card-body { padding: 0 1.25rem 1.25rem; }
+  .menu-name { font-weight: 600; font-size: 1rem; margin-bottom: 4px; }
+  .menu-desc { font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 0.75rem; line-height: 1.5; }
+  .menu-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .menu-tag { font-size: 0.7rem; font-weight: 600; padding: 3px 8px; border-radius: 6px; background: var(--border-light); color: var(--text-secondary); }
+  .menu-tag.trimester { background: var(--teal-light); color: var(--teal-dark); }
+
+  /* TTD TRACKER */
+  .ttd-card { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); padding: 1.75rem; box-shadow: var(--shadow-card); }
+  .ttd-week { display: grid; grid-template-columns: repeat(7,1fr); gap: 8px; margin: 1.25rem 0; }
+  .ttd-day {
+    aspect-ratio: 1;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: 2px solid var(--border);
+    background: var(--surface);
+    color: var(--text-muted);
+    transition: all 0.2s;
+    user-select: none;
+    gap: 3px;
+  }
+  .ttd-day .day-num { font-size: 1.1rem; font-weight: 700; }
+  .ttd-day.done { background: var(--teal-light); border-color: var(--teal); color: var(--teal-dark); }
+  .ttd-day.today { border-width: 2px; border-color: var(--teal-dark); }
+  .ttd-day.missed { background: var(--red-light); border-color: #fecaca; color: var(--red-text); }
+  .ttd-day.future { opacity: 0.4; cursor: default; }
+  .ttd-progress { margin-top: 1rem; }
+  .progress-bar { height: 8px; background: var(--border-light); border-radius: 100px; overflow: hidden; margin-top: 6px; }
+  .progress-fill { height: 100%; background: var(--teal); border-radius: 100px; transition: width 0.5s ease; }
+
+  /* CHATBOT */
+  .chat-container { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow-card); overflow: hidden; }
+  .chat-header { background: var(--teal); color: white; padding: 1.25rem 1.5rem; display: flex; align-items: center; gap: 12px; }
+  .chat-avatar { width: 40px; height: 40px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+  .chat-info .chat-name { font-weight: 600; font-size: 1rem; }
+  .chat-info .chat-status { font-size: 0.75rem; opacity: 0.8; }
+  .chat-messages { height: 400px; overflow-y: auto; padding: 1.25rem; display: flex; flex-direction: column; gap: 12px; background: var(--off-white); }
+  .msg { display: flex; gap: 10px; max-width: 82%; }
+  .msg.user { align-self: flex-end; flex-direction: row-reverse; }
+  .msg-bubble {
+    padding: 10px 14px;
+    border-radius: 14px;
+    font-size: 0.875rem;
+    line-height: 1.55;
+  }
+  .msg.bot .msg-bubble { background: var(--surface); border: 1px solid var(--border); color: var(--text-primary); border-top-left-radius: 4px; }
+  .msg.user .msg-bubble { background: var(--teal); color: white; border-top-right-radius: 4px; }
+  .msg-avatar { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; flex-shrink: 0; }
+  .bot-avatar { background: var(--teal-light); }
+  .user-avatar { background: var(--teal-light); }
+  .chat-input-area { padding: 1rem 1.25rem; border-top: 1px solid var(--border); display: flex; gap: 10px; align-items: center; background: var(--surface); }
+  .chat-input {
+    flex: 1;
+    padding: 10px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 100px;
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .chat-input:focus { border-color: var(--teal); }
+  .chat-send {
+    width: 40px; height: 40px;
+    background: var(--teal);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+  .chat-send:hover { background: var(--teal-dark); transform: scale(1.05); }
+  .chat-suggestions { padding: 0.75rem 1.25rem; display: flex; flex-wrap: wrap; gap: 8px; border-bottom: 1px solid var(--border-light); background: var(--surface); }
+  .suggestion-chip {
+    padding: 6px 12px;
+    background: var(--teal-light);
+    color: var(--teal-dark);
+    border: none;
+    border-radius: 100px;
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .suggestion-chip:hover { background: var(--teal); color: white; }
+  .typing { display: flex; gap: 4px; align-items: center; padding: 10px 14px; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; border-top-left-radius: 4px; width: fit-content; }
+  .typing span { width: 7px; height: 7px; background: var(--text-muted); border-radius: 50%; animation: bounce 1.2s infinite; }
+  .typing span:nth-child(2) { animation-delay: 0.2s; }
+  .typing span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes bounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-6px)} }
+
+  /* PROFIL */
+  .profil-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 1.5rem; }
+  @media(max-width:700px){ .profil-grid { grid-template-columns: 1fr; } }
+  .profil-avatar-card { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); padding: 2rem; text-align: center; box-shadow: var(--shadow-card); }
+  .avatar-circle {
+    width: 90px; height: 90px;
+    background: linear-gradient(135deg, var(--teal-light), var(--teal));
+    border-radius: 50%;
+    margin: 0 auto 1rem;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2.2rem;
+  }
+  .profil-name { font-family: var(--font-display); font-size: 1.4rem; margin-bottom: 4px; }
+  .profil-badge { display: inline-block; background: var(--teal-light); color: var(--teal-dark); padding: 3px 12px; border-radius: 100px; font-size: 0.75rem; font-weight: 600; margin-bottom: 1.25rem; }
+  .profil-stats { display: flex; justify-content: center; gap: 24px; margin-top: 1rem; }
+  .profil-stat { text-align: center; }
+  .profil-stat .num { font-size: 1.4rem; font-weight: 700; color: var(--teal-dark); }
+  .profil-stat .lbl { font-size: 0.7rem; color: var(--text-muted); font-weight: 500; }
+
+  /* MODAL/DARURAT */
+  .emergency-banner {
+    background: var(--red-light);
+    border: 2px solid var(--red);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    display: none;
+  }
+  .emergency-banner h3 { color: var(--red-text); font-size: 1.1rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 8px; }
+  .emergency-banner p { color: var(--red-text); font-size: 0.875rem; }
+
+  /* FOOTER */
+  footer { text-align: center; padding: 2rem; color: var(--text-muted); font-size: 0.8rem; margin-top: 2rem; border-top: 1px solid var(--border); }
+  footer strong { color: var(--teal); }
+
+  /* ANIMATIONS */
+  @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+  .page.active { animation: fadeIn 0.35s ease; }
+  .menu-card, .stat-card { animation: fadeIn 0.4s ease backwards; }
+
+  /* SCROLL BAR */
+  .chat-messages::-webkit-scrollbar { width: 5px; }
+  .chat-messages::-webkit-scrollbar-track { background: transparent; }
+  .chat-messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+
+  .divider { height: 1px; background: var(--border); margin: 1.5rem 0; }
+
+  /* TTD big button */
+  .ttd-today-btn {
+    width: 100%;
+    padding: 1rem;
+    background: var(--teal-light);
+    color: var(--teal-dark);
+    border: 2px dashed var(--teal);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .ttd-today-btn:hover { background: var(--teal); color: white; border-style: solid; }
+  .ttd-today-btn.done-today { background: var(--teal); color: white; border-style: solid; cursor: default; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="#">
+    <div class="logo-icon">
+      <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z"/></svg>
+    </div>
+    <div>
+      <div class="logo-text">FemmIron</div>
+      <div class="logo-sub">Pendamping Sehat Ibu Hamil</div>
+    </div>
+  </a>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showPage('dashboard')">Dashboard</button>
+    <button class="nav-tab" onclick="showPage('hb')">Cek Hb</button>
+    <button class="nav-tab" onclick="showPage('menu')">Menu Gizi</button>
+    <button class="nav-tab" onclick="showPage('ttd')">Tracker TTD</button>
+    <button class="nav-tab" onclick="showPage('chatbot')">Konsultasi</button>
+    <button class="nav-tab" onclick="showPage('profil')">Profil</button>
+  </div>
+</nav>
+
+<main>
+
+<!-- ======================== DASHBOARD ======================== -->
+<div class="page active" id="page-dashboard">
+  <div class="hero">
+    <div class="hero-tag">Selamat pagi ☀️</div>
+    <h1>Halo, Mama Sari! 🤱</h1>
+    <p>Hari ini hari ke-168 kehamilanmu. Yuk cek status kesehatanmu dan jangan lupa minum TTD!</p>
+    <div class="hero-actions">
+      <button class="btn-hero btn-hero-primary" onclick="showPage('hb')">Catat Kadar Hb</button>
+      <button class="btn-hero btn-hero-secondary" onclick="showPage('chatbot')">💬 Konsultasi AI</button>
+    </div>
+  </div>
+
+  <div id="emergency-banner" class="emergency-banner">
+    <h3>⚠️ Peringatan Darurat!</h3>
+    <p>Kadar Hb Mama sangat rendah (&lt;7.0 g/dL). Segera pergi ke Puskesmas atau Rumah Sakit terdekat sekarang. Jangan ditunda ya, Ma!</p>
+  </div>
+
+  <div class="cards-grid">
+    <div class="stat-card">
+      <div class="stat-card-icon icon-teal">🩸</div>
+      <h3>Kadar Hemoglobin</h3>
+      <div class="value big" id="dash-hb">10.2</div>
+      <div class="sub">g/dL</div>
+      <span class="status-badge status-ringan" id="dash-status">Anemia Ringan</span>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-icon icon-green">🤰</div>
+      <h3>Usia Kehamilan</h3>
+      <div class="value big" id="dash-usia">24</div>
+      <div class="sub" id="dash-trimester">minggu • Trimester 2</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-icon icon-orange">💊</div>
+      <h3>TTD Bulan Ini</h3>
+      <div class="value big" id="dash-ttd">18</div>
+      <div class="sub">dari <span id="dash-ttd-total">24</span> hari</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-icon icon-teal">📈</div>
+      <h3>Tren Hb</h3>
+      <div class="value" style="color:var(--green);font-size:1.5rem">↑ 0.4</div>
+      <div class="sub">g/dL bulan ini</div>
+    </div>
+  </div>
+
+  <div id="dash-alert"></div>
+
+  <div class="chart-card">
+    <div class="chart-header">
+      <div>
+        <div class="chart-title">Grafik Tren Hemoglobin</div>
+        <div style="font-size:0.8rem;color:var(--text-muted)">6 bulan terakhir</div>
+      </div>
+      <div class="chart-legend">
+        <div class="legend-item"><div class="legend-dot" style="background:var(--teal)"></div> Kadar Hb Mama</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#22c55e"></div> Batas Normal (11)</div>
+      </div>
+    </div>
+    <canvas id="hbChart" height="120"></canvas>
+  </div>
+
+  <div class="divider"></div>
+  <p class="section-title">Rekomendasi Hari Ini</p>
+  <p class="section-sub">Berdasarkan usia kehamilan dan kondisi Hb Mama</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;margin-bottom:2rem">
+    <div class="stat-card" style="cursor:pointer" onclick="showPage('menu')">
+      <div style="font-size:1.5rem;margin-bottom:0.5rem">🍗</div>
+      <div style="font-weight:600;margin-bottom:4px">Hati Ayam Tumis Bayam</div>
+      <div style="font-size:0.82rem;color:var(--text-secondary)">Tinggi besi heme, cocok untuk trimester 2. Kandungan 7.4 mg zat besi per 100g.</div>
+      <div style="margin-top:0.75rem"><span class="menu-tag trimester">Trimester 2</span> <span class="menu-tag">Tinggi Fe</span></div>
+    </div>
+    <div class="stat-card" style="cursor:pointer" onclick="showPage('ttd')">
+      <div style="font-size:1.5rem;margin-bottom:0.5rem">💊</div>
+      <div style="font-weight:600;margin-bottom:4px">Minum TTD Hari Ini</div>
+      <div style="font-size:0.82rem;color:var(--text-secondary)">Jangan lupa minum Tablet Tambah Darah hari ini ya Ma! Minum malam hari sebelum tidur.</div>
+      <div style="margin-top:0.75rem"><span class="menu-tag" style="background:var(--orange-light);color:var(--orange-text)">Belum diminum</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ======================== CEK HB ======================== -->
+<div class="page" id="page-hb">
+  <p class="section-title">Catat Kadar Hemoglobin</p>
+  <p class="section-sub">Masukkan hasil pemeriksaan dari Puskesmas atau bidan ya, Ma</p>
+
+  <div class="form-card" style="margin-bottom:1.5rem">
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Nama Mama</label>
+        <input type="text" id="in-nama" value="Sari Wulandari" placeholder="Nama lengkap">
+      </div>
+      <div class="form-group">
+        <label>Usia (tahun)</label>
+        <input type="number" id="in-usia" value="26" min="15" max="50">
+      </div>
+      <div class="form-group">
+        <label>Usia Kehamilan (minggu)</label>
+        <input type="number" id="in-minggu" value="24" min="1" max="42" oninput="updateTrimester()">
+        <span class="form-hint" id="trimester-label">Trimester 2 (minggu 13–27)</span>
+      </div>
+      <div class="form-group">
+        <label>Kadar Hemoglobin (g/dL)</label>
+        <input type="number" id="in-hb" step="0.1" min="1" max="20" value="10.2" placeholder="cth: 10.5">
+        <span class="form-hint">Dari hasil lab / Puskesmas</span>
+      </div>
+      <div class="form-group">
+        <label>Berat Badan Sebelum Hamil (kg)</label>
+        <input type="number" id="in-bb" value="52" step="0.1">
+      </div>
+      <div class="form-group">
+        <label>Tanggal Pemeriksaan</label>
+        <input type="date" id="in-tanggal">
+      </div>
+    </div>
+    <div style="margin-top:1.25rem;display:flex;gap:12px;flex-wrap:wrap">
+      <button class="btn-primary" onclick="cekHb()">✅ Simpan & Analisis</button>
+      <button class="btn-secondary" onclick="showPage('dashboard')">Lihat Dashboard</button>
+    </div>
+  </div>
+
+  <div id="hb-result" style="display:none">
+    <div id="hb-alert" class="alert-banner"></div>
+    <div style="background:var(--surface);border-radius:var(--radius);border:1px solid var(--border);padding:1.5rem;box-shadow:var(--shadow-card)">
+      <p style="font-weight:600;margin-bottom:1rem">Panduan Berdasarkan Kondisi Mama:</p>
+      <div id="hb-tips" style="display:flex;flex-direction:column;gap:10px"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ======================== MENU GIZI ======================== -->
+<div class="page" id="page-menu">
+  <p class="section-title">Rekomendasi Menu Gizi</p>
+  <p class="section-sub">Menu makanan tinggi zat besi sesuai usia kehamilan Mama</p>
+
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1.25rem">
+    <button class="btn-primary" onclick="filterMenu('semua')">Semua Menu</button>
+    <button class="btn-secondary" onclick="filterMenu('heme')">Besi Heme (Hewani)</button>
+    <button class="btn-secondary" onclick="filterMenu('non-heme')">Besi Non-Heme (Nabati)</button>
+    <button class="btn-secondary" onclick="filterMenu('t1')">Trimester 1</button>
+    <button class="btn-secondary" onclick="filterMenu('t2')">Trimester 2</button>
+    <button class="btn-secondary" onclick="filterMenu('t3')">Trimester 3</button>
+  </div>
+
+  <div class="menu-grid" id="menu-grid"></div>
+</div>
+
+<!-- ======================== TRACKER TTD ======================== -->
+<div class="page" id="page-ttd">
+  <p class="section-title">Tracker Tablet Tambah Darah</p>
+  <p class="section-sub">Tap hari ini untuk mencatat konsumsi TTD Mama 💊</p>
+
+  <div class="ttd-card" style="margin-bottom:1.25rem">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+      <div style="font-weight:600;font-size:1.1rem" id="ttd-month-label">Juni 2025</div>
+      <div style="display:flex;gap:8px">
+        <button class="btn-secondary" style="padding:6px 14px;font-size:0.8rem" onclick="prevMonth()">← Sebelumnya</button>
+        <button class="btn-secondary" style="padding:6px 14px;font-size:0.8rem" onclick="nextMonth()">Berikutnya →</button>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:8px">
+      <div style="text-align:center;font-size:0.7rem;font-weight:700;color:var(--text-muted);padding:4px">MIN</div>
+      <div style="text-align:center;font-size:0.7rem;font-weight:700;color:var(--text-muted);padding:4px">SEN</div>
+      <div style="text-align:center;font-size:0.7rem;font-weight:700;color:var(--text-muted);padding:4px">SEL</div>
+      <div style="text-align:center;font-size:0.7rem;font-weight:700;color:var(--text-muted);padding:4px">RAB</div>
+      <div style="text-align:center;font-size:0.7rem;font-weight:700;color:var(--text-muted);padding:4px">KAM</div>
+      <div style="text-align:center;font-size:0.7rem;font-weight:700;color:var(--text-muted);padding:4px">JUM</div>
+      <div style="text-align:center;font-size:0.7rem;font-weight:700;color:var(--text-muted);padding:4px">SAB</div>
+    </div>
+    <div class="ttd-week" id="ttd-calendar" style="grid-template-columns:repeat(7,1fr)"></div>
+
+    <div class="ttd-progress">
+      <div style="display:flex;justify-content:space-between;font-size:0.8rem">
+        <span style="color:var(--text-secondary);font-weight:600">Kepatuhan bulan ini</span>
+        <span style="color:var(--teal-dark);font-weight:700" id="ttd-pct">75%</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="ttd-progress-fill" style="width:75%"></div></div>
+      <div style="font-size:0.75rem;color:var(--text-muted);margin-top:6px" id="ttd-summary">18 dari 24 hari sudah minum TTD 💪</div>
+    </div>
+  </div>
+
+  <button class="ttd-today-btn" id="ttd-today-btn" onclick="toggleToday()">💊 Tandai Sudah Minum TTD Hari Ini</button>
+
+  <div style="margin-top:1.5rem;background:var(--teal-light);border-radius:var(--radius-sm);padding:1.25rem">
+    <p style="font-weight:600;color:var(--teal-dark);margin-bottom:0.5rem">💡 Tips Minum TTD:</p>
+    <ul style="color:var(--teal-dark);font-size:0.85rem;line-height:1.8;padding-left:1.25rem">
+      <li>Minum malam hari sebelum tidur untuk mengurangi mual</li>
+      <li>Konsumsi bersama air putih atau jus jeruk (vitamin C membantu penyerapan)</li>
+      <li>Hindari minum bersama teh, kopi, atau susu (menghambat penyerapan)</li>
+      <li>Wajar jika BAB menjadi lebih gelap setelah minum TTD</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ======================== CHATBOT ======================== -->
+<div class="page" id="page-chatbot">
+  <p class="section-title">Konsultasi dengan FemBot 🤖</p>
+  <p class="section-sub">Tanya apa saja soal gizi kehamilan, anemia, dan menu makanan</p>
+
+  <div class="chat-container">
+    <div class="chat-header">
+      <div class="chat-avatar">🤖</div>
+      <div class="chat-info">
+        <div class="chat-name">FemBot — Asisten Nutrisi</div>
+        <div class="chat-status">● Online sekarang</div>
+      </div>
+    </div>
+    <div class="chat-suggestions">
+      <button class="suggestion-chip" onclick="sendSuggestion('Makanan apa yang bagus untuk anemia?')">🍗 Makanan tinggi zat besi</button>
+      <button class="suggestion-chip" onclick="sendSuggestion('Apa itu TTD dan kenapa penting?')">💊 Tentang TTD</button>
+      <button class="suggestion-chip" onclick="sendSuggestion('Kenapa Hb saya turun di trimester 2?')">📉 Kenapa Hb turun?</button>
+      <button class="suggestion-chip" onclick="sendSuggestion('Minuman apa yang harus dihindari saat minum TTD?')">🚫 Pantangan TTD</button>
+    </div>
+    <div class="chat-messages" id="chat-messages">
+      <div class="msg bot">
+        <div class="msg-avatar bot-avatar">🤖</div>
+        <div class="msg-bubble">Halo Mama Sari! 👋 Saya FemBot, asisten nutrisi kehamilan kamu. Saya siap bantu jawab pertanyaan seputar anemia, gizi, dan menu makanan bergizi selama kehamilan. Mau tanya apa hari ini? 😊</div>
+      </div>
+    </div>
+    <div class="chat-input-area">
+      <input class="chat-input" id="chat-input" type="text" placeholder="Ketik pertanyaan kamu di sini..." onkeypress="if(event.key==='Enter')sendChat()">
+      <button class="chat-send" onclick="sendChat()">➤</button>
+    </div>
+  </div>
+</div>
+
+<!-- ======================== PROFIL ======================== -->
+<div class="page" id="page-profil">
+  <p class="section-title">Profil Kehamilan</p>
+  <p class="section-sub">Data kesehatan Mama selama kehamilan</p>
+
+  <div class="profil-grid">
+    <div>
+      <div class="profil-avatar-card">
+        <div class="avatar-circle">🤱</div>
+        <div class="profil-name">Sari Wulandari</div>
+        <div style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:8px">26 tahun · Primigravida</div>
+        <div class="profil-badge">Trimester 2 — Minggu 24</div>
+        <div class="profil-stats">
+          <div class="profil-stat"><div class="num">75%</div><div class="lbl">Kepatuhan TTD</div></div>
+          <div class="profil-stat"><div class="num">3</div><div class="lbl">Rekam Hb</div></div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="form-card">
+        <p style="font-weight:600;margin-bottom:1rem">Edit Profil</p>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Nama Lengkap</label>
+            <input type="text" value="Sari Wulandari">
+          </div>
+          <div class="form-group">
+            <label>Tanggal Lahir</label>
+            <input type="date" value="1999-03-15">
+          </div>
+          <div class="form-group">
+            <label>Usia Kehamilan (minggu)</label>
+            <input type="number" value="24">
+          </div>
+          <div class="form-group">
+            <label>BB Sebelum Hamil (kg)</label>
+            <input type="number" value="52">
+          </div>
+          <div class="form-group">
+            <label>Nama Bidan / Dokter</label>
+            <input type="text" value="Bidan Sri Astuti">
+          </div>
+          <div class="form-group">
+            <label>Puskesmas</label>
+            <input type="text" value="Puskesmas Purwokerto Timur">
+          </div>
+        </div>
+        <div style="margin-top:1.25rem">
+          <button class="btn-primary">💾 Simpan Perubahan</button>
+        </div>
+      </div>
+
+      <div style="margin-top:1rem;background:var(--surface);border-radius:var(--radius);border:1px solid var(--border);padding:1.5rem;box-shadow:var(--shadow-card)">
+        <p style="font-weight:600;margin-bottom:1rem">Riwayat Pemeriksaan Hb</p>
+        <table style="width:100%;font-size:0.85rem;border-collapse:collapse">
+          <thead><tr style="color:var(--text-muted);text-align:left">
+            <th style="padding:8px 0;font-weight:600;border-bottom:1px solid var(--border)">Tanggal</th>
+            <th style="padding:8px 0;font-weight:600;border-bottom:1px solid var(--border)">Kadar Hb</th>
+            <th style="padding:8px 0;font-weight:600;border-bottom:1px solid var(--border)">Status</th>
+          </tr></thead>
+          <tbody>
+            <tr><td style="padding:10px 0;border-bottom:1px solid var(--border-light)">1 Jun 2025</td><td style="padding:10px 0;border-bottom:1px solid var(--border-light);font-weight:600">10.2 g/dL</td><td><span class="status-badge status-ringan" style="position:static">Anemia Ringan</span></td></tr>
+            <tr><td style="padding:10px 0;border-bottom:1px solid var(--border-light)">1 Mei 2025</td><td style="padding:10px 0;border-bottom:1px solid var(--border-light);font-weight:600">9.8 g/dL</td><td><span class="status-badge status-sedang" style="position:static">Anemia Sedang</span></td></tr>
+            <tr><td style="padding:10px 0">1 Apr 2025</td><td style="padding:10px 0;font-weight:600">9.5 g/dL</td><td><span class="status-badge status-sedang" style="position:static">Anemia Sedang</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<footer>
+  FemmIron — Rancangan oleh <strong>Aisuwaini</strong> (I1D023129) · Referensi: Kemenkes RI & WHO · Bukan pengganti konsultasi medis langsung
+</footer>
+
+<script>
+// ===================== NAVIGATION =====================
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  const tabs = document.querySelectorAll('.nav-tab');
+  const order = ['dashboard','hb','menu','ttd','chatbot','profil'];
+  tabs[order.indexOf(id)].classList.add('active');
+}
+
+// ===================== HB CHART =====================
+const hbData = {
+  labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun'],
+  values: [9.1, 9.3, 9.5, 9.8, 10.2, 10.2]
+};
+
+function initChart() {
+  const ctx = document.getElementById('hbChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: hbData.labels,
+      datasets: [
+        {
+          label: 'Kadar Hb (g/dL)',
+          data: hbData.values,
+          borderColor: '#0d9488',
+          backgroundColor: 'rgba(13,148,136,0.08)',
+          borderWidth: 2.5,
+          pointBackgroundColor: '#0d9488',
+          pointRadius: 5,
+          pointHoverRadius: 7,
+          tension: 0.4,
+          fill: true,
+        },
+        {
+          label: 'Batas Normal (11 g/dL)',
+          data: Array(6).fill(11),
+          borderColor: '#22c55e',
+          borderWidth: 2,
+          borderDash: [6, 4],
+          pointRadius: 0,
+          fill: false,
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: { mode: 'index', intersect: false }
+      },
+      scales: {
+        y: {
+          min: 6, max: 14,
+          grid: { color: 'rgba(0,0,0,0.05)' },
+          ticks: { font: { family: 'Plus Jakarta Sans', size: 11 }, callback: v => v + ' g/dL' }
+        },
+        x: { grid: { display: false }, ticks: { font: { family: 'Plus Jakarta Sans', size: 11 } } }
+      }
+    }
+  });
+}
+
+// ===================== CEK HB =====================
+function updateTrimester() {
+  const w = parseInt(document.getElementById('in-minggu').value);
+  const lbl = document.getElementById('trimester-label');
+  if (w <= 12) lbl.textContent = 'Trimester 1 (minggu 1–12)';
+  else if (w <= 27) lbl.textContent = 'Trimester 2 (minggu 13–27)';
+  else lbl.textContent = 'Trimester 3 (minggu 28–42)';
+}
+
+function getStatusHb(hb) {
+  if (hb >= 11) return { label: 'Normal', cls: 'normal', badge: 'status-normal', alert: 'alert-normal', icon: '✅', msg: 'Kadar Hb Mama sudah normal! Pertahankan terus ya.' };
+  if (hb >= 10) return { label: 'Anemia Ringan', cls: 'ringan', badge: 'status-ringan', alert: 'alert-ringan', icon: '⚠️', msg: 'Hb Mama sedikit di bawah normal. Tingkatkan konsumsi makanan tinggi zat besi dan pastikan TTD rutin diminum.' };
+  if (hb >= 7) return { label: 'Anemia Sedang', cls: 'sedang', badge: 'status-sedang', alert: 'alert-sedang', icon: '🔶', msg: 'Hb Mama perlu perhatian. Segera konsultasikan dengan bidan atau dokter. Perbanyak konsumsi hati ayam dan daging sapi.' };
+  return { label: 'Anemia Berat', cls: 'berat', badge: 'status-berat', alert: 'alert-berat', icon: '🚨', msg: 'DARURAT! Kadar Hb sangat rendah. Segera ke Puskesmas atau Rumah Sakit terdekat sekarang!' };
+}
+
+const tipsByStatus = {
+  normal: [
+    { icon: '🥗', text: 'Pertahankan pola makan seimbang dengan sumber zat besi beragam.' },
+    { icon: '💊', text: 'Tetap minum TTD setiap hari meski Hb sudah normal.' },
+    { icon: '🍊', text: 'Konsumsi buah kaya vitamin C untuk membantu penyerapan zat besi.' },
+  ],
+  ringan: [
+    { icon: '🍗', text: 'Perbanyak konsumsi hati ayam, daging sapi, dan ikan laut.' },
+    { icon: '💊', text: 'Pastikan TTD diminum rutin malam hari, hindari bersama teh/kopi.' },
+    { icon: '🥦', text: 'Tambahkan bayam, brokoli, dan kacang-kacangan dalam menu harian.' },
+    { icon: '🍊', text: 'Minum jus jeruk atau tomat bersama makanan tinggi zat besi.' },
+  ],
+  sedang: [
+    { icon: '🚨', text: 'Segera konsultasi dengan bidan atau dokter!' },
+    { icon: '🍖', text: 'Prioritaskan besi heme: hati sapi/ayam, daging merah, ikan salmon.' },
+    { icon: '💊', text: 'Pastikan tidak ada hari yang terlewat minum TTD.' },
+    { icon: '🏥', text: 'Dokter mungkin akan meresepkan suplemen zat besi tambahan.' },
+  ],
+  berat: [
+    { icon: '🚑', text: 'SEGERA pergi ke fasilitas kesehatan! Risiko perdarahan sangat tinggi.' },
+    { icon: '📞', text: 'Hubungi bidan atau dokter kandungan Mama sekarang juga.' },
+    { icon: '🛌', text: 'Hindari aktivitas berat dan istirahat total.' },
+  ]
+};
+
+function cekHb() {
+  const hb = parseFloat(document.getElementById('in-hb').value);
+  const minggu = parseInt(document.getElementById('in-minggu').value);
+  if (isNaN(hb) || hb <= 0) { alert('Mohon isi kadar Hb yang valid ya, Ma!'); return; }
+
+  const st = getStatusHb(hb);
+  const tri = minggu <= 12 ? 1 : minggu <= 27 ? 2 : 3;
+
+  document.getElementById('dash-hb').textContent = hb.toFixed(1);
+  document.getElementById('dash-status').textContent = st.label;
+  document.getElementById('dash-status').className = 'status-badge ' + st.badge;
+  document.getElementById('dash-usia').textContent = minggu;
+  document.getElementById('dash-trimester').textContent = 'minggu • Trimester ' + tri;
+
+  const alertEl = document.getElementById('hb-alert');
+  alertEl.className = 'alert-banner ' + st.alert;
+  alertEl.innerHTML = `<div class="alert-icon">${st.icon}</div><div><strong>${st.label}</strong>${st.msg}</div>`;
+
+  const tips = tipsByStatus[st.cls];
+  const tipsEl = document.getElementById('hb-tips');
+  tipsEl.innerHTML = tips.map(t => `<div style="display:flex;gap:12px;padding:10px 14px;background:var(--off-white);border-radius:var(--radius-sm);align-items:flex-start"><span style="font-size:1.2rem">${t.icon}</span><span style="font-size:0.875rem;color:var(--text-secondary)">${t.text}</span></div>`).join('');
+
+  document.getElementById('hb-result').style.display = 'block';
+
+  const emBanner = document.getElementById('emergency-banner');
+  emBanner.style.display = hb < 7 ? 'block' : 'none';
+
+  const dashAlert = document.getElementById('dash-alert');
+  dashAlert.innerHTML = `<div class="alert-banner ${st.alert}" style="margin-bottom:1.25rem"><div class="alert-icon">${st.icon}</div><div><strong>${st.label}</strong>${st.msg}</div></div>`;
+
+  showPage('hb');
+}
+
+// ===================== MENU =====================
+const menus = [
+  { nama: 'Hati Ayam Tumis Bayam', emoji: '🍗', fe: '8.2 mg Fe', desc: 'Sumber besi heme terbaik! Hati ayam kaya zat besi dan vitamin B12. Cocok dikonsumsi 2–3x seminggu.', tags: ['Heme', 'Tinggi Fe'], trimester: ['t1','t2','t3'], tipe: 'heme' },
+  { nama: 'Daging Sapi Rendang', emoji: '🥩', fe: '5.5 mg Fe', desc: 'Rendang daging sapi adalah sumber besi heme yang lezat dan mengenyangkan. Aman untuk semua trimester.', tags: ['Heme', 'Protein'], trimester: ['t1','t2','t3'], tipe: 'heme' },
+  { nama: 'Ikan Salmon Panggang', emoji: '🐟', fe: '3.4 mg Fe', desc: 'Kaya omega-3 untuk perkembangan otak si kecil, ditambah kandungan zat besi yang baik.', tags: ['Heme', 'Omega-3'], trimester: ['t2','t3'], tipe: 'heme' },
+  { nama: 'Tempe Mendoan', emoji: '🟤', fe: '4.0 mg Fe', desc: 'Sumber besi non-heme dari kedelai. Lebih baik dikonsumsi bersama sumber vitamin C.', tags: ['Non-Heme', 'Murah'], trimester: ['t1','t2','t3'], tipe: 'non-heme' },
+  { nama: 'Sayur Bayam & Tofu', emoji: '🥬', fe: '3.6 mg Fe', desc: 'Bayam adalah sumber besi non-heme nabati. Kombinasikan dengan tahu untuk protein lengkap.', tags: ['Non-Heme', 'Serat'], trimester: ['t1','t2','t3'], tipe: 'non-heme' },
+  { nama: 'Kacang Merah Balado', emoji: '🫘', fe: '5.2 mg Fe', desc: 'Kacang merah tinggi zat besi, serat, dan asam folat. Sangat baik untuk trimester pertama.', tags: ['Non-Heme', 'Folat'], trimester: ['t1','t2'], tipe: 'non-heme' },
+  { nama: 'Telur Dadar Bayam', emoji: '🍳', fe: '2.1 mg Fe', desc: 'Sarapan bergizi yang mudah dibuat. Kuning telur mengandung zat besi yang baik untuk ibu hamil.', tags: ['Heme', 'Sarapan'], trimester: ['t1','t2','t3'], tipe: 'heme' },
+  { nama: 'Sup Kacang Merah & Daging', emoji: '🍲', fe: '6.8 mg Fe', desc: 'Kombinasi sempurna antara besi heme dan non-heme dalam satu sajian hangat dan bergizi.', tags: ['Heme', 'Non-Heme', 'Sup'], trimester: ['t2','t3'], tipe: 'heme' },
+  { nama: 'Edamame Rebus', emoji: '🫛', fe: '2.9 mg Fe', desc: 'Snack sehat trimester pertama. Kaya folat, protein, dan zat besi non-heme.', tags: ['Non-Heme', 'Snack'], trimester: ['t1','t2'], tipe: 'non-heme' },
+];
+
+function renderMenu(filter) {
+  const grid = document.getElementById('menu-grid');
+  const filtered = filter === 'semua' ? menus : menus.filter(m => m.tipe === filter || m.trimester.includes(filter));
+  grid.innerHTML = filtered.map((m, i) => `
+    <div class="menu-card" style="animation-delay:${i*0.05}s">
+      <div class="menu-card-header">
+        <span class="menu-emoji">${m.emoji}</span>
+        <span class="menu-fe">${m.fe}</span>
+      </div>
+      <div class="menu-card-body">
+        <div class="menu-name">${m.nama}</div>
+        <div class="menu-desc">${m.desc}</div>
+        <div class="menu-tags">
+          ${m.tags.map(t=>`<span class="menu-tag">${t}</span>`).join('')}
+          ${m.trimester.map(t=>`<span class="menu-tag trimester">${t==='t1'?'Trimester 1':t==='t2'?'Trimester 2':'Trimester 3'}</span>`).join('')}
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function filterMenu(f) { renderMenu(f); }
+renderMenu('semua');
+
+// ===================== TTD TRACKER =====================
+let ttdDone = new Set();
+let ttdMissed = new Set([2, 5, 9, 14]);
+let currentMonth = new Date(2025, 5, 1); // June 2025
+let todayDone = false;
+
+// Prefill some done days
+[1,3,4,6,7,8,10,11,12,13,15,16,17,18,19,20,21,22,23,24].forEach(d => ttdDone.add('2025-5-' + d));
+
+function renderCalendar() {
+  const y = currentMonth.getFullYear();
+  const m = currentMonth.getMonth();
+  const monthNames = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+  document.getElementById('ttd-month-label').textContent = monthNames[m] + ' ' + y;
+
+  const firstDay = new Date(y, m, 1).getDay();
+  const daysInMonth = new Date(y, m+1, 0).getDate();
+  const today = new Date();
+  const isCurrentMonth = today.getFullYear() === y && today.getMonth() === m;
+  const todayDate = today.getDate();
+
+  const cal = document.getElementById('ttd-calendar');
+  let html = '';
+  for (let i = 0; i < firstDay; i++) html += '<div></div>';
+  for (let d = 1; d <= daysInMonth; d++) {
+    const key = y + '-' + m + '-' + d;
+    const isToday = isCurrentMonth && d === todayDate;
+    const isFuture = isCurrentMonth && d > todayDate;
+    const isDone = ttdDone.has(key) || (isToday && todayDone);
+    const isMissed = ttdMissed.has(d) && !isDone && !isFuture;
+    let cls = 'ttd-day';
+    if (isDone) cls += ' done';
+    else if (isFuture) cls += ' future';
+    else if (isMissed) cls += ' missed';
+    if (isToday) cls += ' today';
+    const icon = isDone ? '✓' : isMissed ? '✕' : '';
+    html += `<div class="${cls}" onclick="toggleDay('${key}', ${isFuture})"><span class="day-num">${d}</span><span>${icon}</span></div>`;
+  }
+  cal.innerHTML = html;
+  updateTtdStats();
+}
+
+function toggleDay(key, isFuture) {
+  if (isFuture) return;
+  if (ttdDone.has(key)) ttdDone.delete(key);
+  else ttdDone.add(key);
+  renderCalendar();
+}
+
+function toggleToday() {
+  todayDone = !todayDone;
+  const btn = document.getElementById('ttd-today-btn');
+  if (todayDone) {
+    btn.textContent = '✅ TTD Hari Ini Sudah Dicatat!';
+    btn.classList.add('done-today');
+  } else {
+    btn.textContent = '💊 Tandai Sudah Minum TTD Hari Ini';
+    btn.classList.remove('done-today');
+  }
+  renderCalendar();
+}
+
+function updateTtdStats() {
+  const today = new Date();
+  const y = currentMonth.getFullYear(), m = currentMonth.getMonth();
+  const isCurrentMonth = today.getFullYear() === y && today.getMonth() === m;
+  const passedDays = isCurrentMonth ? today.getDate() : new Date(y, m+1, 0).getDate();
+  const doneCount = [...ttdDone].filter(k => k.startsWith(y + '-' + m + '-')).length + (todayDone ? 1 : 0);
+  const pct = passedDays > 0 ? Math.round((doneCount / passedDays) * 100) : 0;
+  document.getElementById('ttd-pct').textContent = pct + '%';
+  document.getElementById('ttd-progress-fill').style.width = pct + '%';
+  document.getElementById('ttd-summary').textContent = doneCount + ' dari ' + passedDays + ' hari sudah minum TTD 💪';
+  document.getElementById('dash-ttd').textContent = doneCount;
+  document.getElementById('dash-ttd-total').textContent = passedDays;
+}
+
+function prevMonth() { currentMonth.setMonth(currentMonth.getMonth() - 1); renderCalendar(); }
+function nextMonth() { currentMonth.setMonth(currentMonth.getMonth() + 1); renderCalendar(); }
+
+// ===================== CHATBOT =====================
+const botResponses = {
+  'hati ayam': 'Hati ayam adalah JUARA sumber besi heme, Ma! 🏆 Kandungannya sekitar 7–9 mg zat besi per 100g. Tapi batasi 1–2 kali seminggu ya karena tinggi vitamin A yang berlebih tidak baik untuk bayi. Tumis dengan bayam dan tambahkan perasan jeruk nipis untuk penyerapan optimal!',
+  'daging': 'Daging merah seperti sapi dan kambing mengandung besi heme yang mudah diserap tubuh, Ma! 🥩 Usahakan masak hingga matang sempurna selama kehamilan. Rendang, semur, atau sup daging adalah pilihan yang lezat!',
+  'bayam': 'Bayam memang tinggi zat besi non-heme (sekitar 2.7 mg/100g), Ma! 🥬 Tapi penting untuk dikonsumsi bersama vitamin C agar penyerapannya lebih optimal. Coba tumis bayam dengan tomat, atau makan bersama jus jeruk ya!',
+  'ttd': 'Tablet Tambah Darah (TTD) wajib diminum 1 tablet sehari selama kehamilan, Ma! 💊 Tips terbaik: minum malam hari sebelum tidur untuk mengurangi efek mual. HINDARI minum bersama teh, kopi, atau susu karena bisa menghambat penyerapan. Jus jeruk justru membantu!',
+  'mual': 'Kalau mual setelah minum TTD itu wajar kok Ma! 😊 Tips mengatasinya: coba minum setelah makan malam atau menjelang tidur, minum dengan jus buah (bukan susu), atau minta bidan untuk merek TTD yang berbeda jika mual berlebihan.',
+  'hb': 'Kadar Hb normal ibu hamil ≥ 11 g/dL ya, Ma! 🩸 Kalau di bawah itu tandanya anemia. Faktor yang mempengaruhi: asupan makanan bergizi, konsumsi TTD rutin, usia kehamilan (Hb memang cenderung turun di trimester 2 karena volume darah meningkat), dan penyerapan zat besi tubuh.',
+  'trimester': 'Setiap trimester punya kebutuhan gizi yang berbeda ya, Ma! 🤰 Trimester 1: fokus folat & zat besi (cegah anemia awal). Trimester 2: peningkatan asupan protein & zat besi (pertumbuhan pesat si kecil). Trimester 3: kalori & kalsium lebih tinggi untuk persiapan persalinan.',
+  'teh': 'Teh dan kopi memang perlu dibatasi selama hamil, Ma! ☕ Tanin dalam teh dan kafein dalam kopi bisa menghambat penyerapan zat besi. Kalau mau minum teh, tunggu 1–2 jam setelah makan atau minum TTD ya!',
+  'vitamin c': 'Vitamin C adalah sahabat terbaik zat besi non-heme, Ma! 🍊 Konsumsi jeruk, tomat, paprika merah, atau nanas bersama makanan tinggi zat besi bisa meningkatkan penyerapan hingga 3–4 kali lipat! Jadi yuk tambahkan buah ke menu harian Mama.',
+  'anemia': 'Anemia pada ibu hamil terjadi ketika kadar Hb di bawah 11 g/dL. Ada 3 tingkatan: Ringan (10–10.9), Sedang (7–9.9), dan Berat (<7). Gejalanya: lemas, pucat, pusing, sesak napas. Pencegahan terbaik: TTD rutin + makanan tinggi zat besi + cek Hb berkala! 💪',
+  'default': 'Maaf Ma, saya belum punya jawaban spesifik untuk pertanyaan itu. Tapi saya sarankan untuk berkonsultasi langsung dengan bidan atau dokter kandungan Mama ya! Mereka adalah sumber informasi terpercaya untuk kehamilan yang sehat. 😊 Coba tanyakan hal lain seputar: makanan bergizi, TTD, kadar Hb, atau pantangan selama hamil!'
+};
+
+function getBotResponse(msg) {
+  const lc = msg.toLowerCase();
+  for (const [key, val] of Object.entries(botResponses)) {
+    if (lc.includes(key)) return val;
+  }
+  return botResponses['default'];
+}
+
+function addMsg(text, who) {
+  const msgs = document.getElementById('chat-messages');
+  const div = document.createElement('div');
+  div.className = 'msg ' + who;
+  div.innerHTML = `<div class="msg-avatar ${who}-avatar">${who==='bot'?'🤖':'👩'}</div><div class="msg-bubble">${text}</div>`;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function sendChat() {
+  const input = document.getElementById('chat-input');
+  const msg = input.value.trim();
+  if (!msg) return;
+  addMsg(msg, 'user');
+  input.value = '';
+
+  const msgs = document.getElementById('chat-messages');
+  const typingDiv = document.createElement('div');
+  typingDiv.className = 'msg bot';
+  typingDiv.innerHTML = `<div class="msg-avatar bot-avatar">🤖</div><div class="typing"><span></span><span></span><span></span></div>`;
+  msgs.appendChild(typingDiv);
+  msgs.scrollTop = msgs.scrollHeight;
+
+  setTimeout(() => {
+    msgs.removeChild(typingDiv);
+    addMsg(getBotResponse(msg), 'bot');
+  }, 1200 + Math.random() * 800);
+}
+
+function sendSuggestion(txt) {
+  document.getElementById('chat-input').value = txt;
+  sendChat();
+}
+
+// ===================== INIT =====================
+document.getElementById('in-tanggal').value = new Date().toISOString().split('T')[0];
+updateTrimester();
+renderCalendar();
+initChart();
+
+// Initial dashboard alert
+document.getElementById('dash-alert').innerHTML = `<div class="alert-banner alert-ringan" style="margin-bottom:1.25rem"><div class="alert-icon">⚠️</div><div><strong>Anemia Ringan</strong>Hb Mama sedikit di bawah normal. Tingkatkan konsumsi makanan tinggi zat besi dan pastikan TTD rutin diminum ya, Ma!</div></div>`;
+</script>
+</body>
+</html>
